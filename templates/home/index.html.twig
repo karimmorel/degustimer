@@ -15,6 +15,10 @@
         <h1>No task running actually</h1>
     {% endif %}
 
+    <div class="container">
+    <p>Today, I have worked {{ todaysWorkingTime }}</p>
+    </div>
+
     {{ form_start(form) }}
         {{ form_widget(form) }}
         <input type="submit" value="Start">

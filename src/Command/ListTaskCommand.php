@@ -36,13 +36,18 @@ class ListTaskCommand extends Command
 
         foreach ($taskSpanList as $key => $taskSpan)
         {
-            $status = $taskSpan->getStoppedAt()->format('d - m - Y / h : i : s') ? 'Ended' : 'Actually running';
+            $status = $taskSpan->getStoppedAt() ? 'Ended' : 'Actually running';
 
             $output->writeln('Name : '.$taskSpan->getTask()->getName());
             $output->writeln('Status : '.$status);
             $output->writeln('Created : '.$taskSpan->getCreatedAt()->format('d - m - Y / h : i : s'));
-            $output->writeln('Ended : '.$taskSpan->getStoppedAt()->format('d - m - Y / h : i : s'));
-            $output->writeln('Time elapsed : '.$taskSpan->getCreatedAt()->diff($taskSpan->getStoppedAt())->format('%h : %i : %s'));
+
+            // Show these informations only if the task is actually running
+            if($taskSpan->getStoppedAt())
+            {
+                $output->writeln('Ended : '.$taskSpan->getStoppedAt()->format('d - m - Y / h : i : s'));
+                $output->writeln('Time elapsed : '.$taskSpan->getCreatedAt()->diff($taskSpan->getStoppedAt())->format('%h : %i : %s'));
+            }
             
             if($key != count($taskSpanList)-1)
             {

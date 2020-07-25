@@ -38,7 +38,7 @@ class TaskSpanRepository extends ServiceEntityRepository implements TaskSpanRepo
     }
 
     // As requested, for the command line I take in argument the name of the task, but I think it is not necessary because there is only one task running at a time
-    // That's why I did a different method for the command line event running stopRunningTaskSpan()
+    // That's why I did a different method for the command line instead of running stopRunningTaskSpan()
     public function stopRunningTaskSpanFromCommandLine($taskName)
     {
         $em = $this->getEntityManager();
@@ -92,12 +92,8 @@ class TaskSpanRepository extends ServiceEntityRepository implements TaskSpanRepo
 
             if(array_key_exists($taskSpan->getTask()->getName(), $dailySummary))
             {
-                $e = new \DateTime;
-                $f = clone $e;
-                $e->add($dailySummary[$taskSpan->getTask()->getName()]);
-                $e->add($taskSpan->getTaskSpanInterval());
 
-                $interval = $f->diff($e);
+                $interval = $this->addIntervals($dailySummary[$taskSpan->getTask()->getName()], $taskSpan->getTaskSpanInterval());
 
                 $dailySummary[$taskSpan->getTask()->getName()] = $interval;
             }
@@ -110,6 +106,47 @@ class TaskSpanRepository extends ServiceEntityRepository implements TaskSpanRepo
                 $dailySummary = array();
 
         return $summary;
+    }
+
+    // Get Today's Working Time
+    public function getTodaysWorkingTime()
+    {
+        $taskSpanList = $this->createQueryBuilder('ts')
+        ->andWhere('ts.stoped_at IS NOT NULL')
+        ->andWhere('ts.created_at LIKE :currentdate')
+        ->setParameter('currentdate', '%'.(new \DateTime)->format('Y-m-d').'%')
+        ->getQuery()
+        ->getResult();
+
+        $interval = null;
+
+        foreach ($taskSpanList as $taskSpan)
+        {
+            if($interval != null)
+            {
+                $interval = $this->addIntervals($interval, $taskSpan->getCreatedAt()->diff($taskSpan->getStoppedAt()));
+            }
+            else
+            {
+                $interval = $taskSpan->getCreatedAt()->diff($taskSpan->getStoppedAt());
+            }
+        }
+
+        return $interval->format('%h h : %i min : %s sec');
+
+    }
+
+    // Add Two intervals to create one object Interval
+    protected function addIntervals($firstInterval, $secondInterval)
+    {
+        $e = new \DateTime;
+        $f = clone $e;
+        $e->add($firstInterval);
+        $e->add($secondInterval);
+
+        $interval = $f->diff($e);
+
+        return $interval;
     }
 
 }

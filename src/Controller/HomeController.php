@@ -39,8 +39,9 @@ class HomeController extends AbstractController
             'method' => 'POST'
         ));
 
-        // Get the Task actually running
+        // Get the Task actually running + Today's working time
         $runningTaskSpan = $this->taskSpanRepository->getRunningTaskSpan();
+        $todaysWorkingTime = $this->taskSpanRepository->getTodaysWorkingTime();
 
         // Get task's summary
         $summary = $this->taskSpanRepository->getSummary();
@@ -51,7 +52,8 @@ class HomeController extends AbstractController
          'form' => $form->createView(),
          'stopTaskForm' => $stopTaskForm->createView(),
          'summary' => $summary,
-         'runningTaskSpan' => $runningTaskSpan
+         'runningTaskSpan' => $runningTaskSpan,
+         'todaysWorkingTime' => $todaysWorkingTime
          )
     );
     }
