@@ -46,7 +46,6 @@ class TaskRepository extends ServiceEntityRepository
         $this->taskSpanRepository->stopRunningTask();
 
         $em->persist($taskSpan);
-        $em->flush();
     }
 
     // /**

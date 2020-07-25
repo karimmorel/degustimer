@@ -8,6 +8,7 @@ use App\Entity\Task;
 use App\Repository\TaskRepository;
 use App\Repository\TaskSpanRepository;
 use App\Form\TaskType;
+use App\Form\StopTaskType;
 use Symfony\Component\HttpFoundation\Request;
 
 class HomeController extends AbstractController
@@ -22,32 +23,31 @@ class HomeController extends AbstractController
     /**
      * @Route("/", name="home")
      */
-    public function index(Request $request)
+    public function index()
     {
-        $entityManager = $this->getDoctrine()->getManager();
 
         // Creating the TaskType form with an entity Task
         $task = new Task();
-        $form = $this->createForm(TaskType::class, $task);
-        $form->handleRequest($request);
+        $form = $this->createForm(TaskType::class, $task, array(
+            'action' => $this->generateUrl('task.create'),
+            'method' => 'POST'
+        ));
+
+        // Creating the "Stop" button to stop a task - Using a form will create a usefull csrf_token
+        $stopTaskForm = $this->createForm(StopTaskType::class, null, array(
+            'action' => $this->generateUrl('task.stop'),
+            'method' => 'POST'
+        ));
 
         // Get task's summary
         $summary = $this->taskSpanRepository->getSummary();
-
-        if ($form->isSubmitted() && $form->isValid())
-        {
-            // Check if the task already exists
-            $this->taskRepository->generateNewTask($task);
-            $this->addFlash('message', 'New task saved');
-            
-            return $this->redirectToRoute('home');
-        }
 
         // View
         return $this->render('home/index.html.twig', 
         array('controller_name' => 'HomeController',
          'form' => $form->createView()
-         ,'summary' => $summary)
+         ,'summary' => $summary,
+         'stopTaskForm' => $stopTaskForm->createView())
     );
     }
 }

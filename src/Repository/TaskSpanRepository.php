@@ -22,7 +22,6 @@ class TaskSpanRepository extends ServiceEntityRepository
     // Only one task should be running at the same time, so I get all the tasks which hasn't been ended, and I stop them.
     public function stopRunningTask()
     {
-        $em = $this->getEntityManager();
         $runningTasks = $this->findBy(array('stoped_at' => null));
 
         if(count($runningTasks))

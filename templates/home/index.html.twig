@@ -16,12 +16,16 @@
         <input type="submit" value="Start">
     {{ form_end(form) }}
 
+    {{ form_start(stopTaskForm) }}
+        {{ form_widget(stopTaskForm) }}
+        <input type="submit" value="Stop">
+    {{ form_end(stopTaskForm) }}
+
     {% for message in app.flashes('message') %}
             <div class="alert alert-success">
                 {{ message }}
             </div>
-        {% endfor %}
-    
+    {% endfor %}
 </div>
 <div class="container">
     {% for day, dailySummary in summary %}
@@ -31,4 +35,5 @@
         {% endfor %}
     {% endfor %}
 </div>
+
 {% endblock %}
