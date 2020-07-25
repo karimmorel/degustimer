@@ -20,17 +20,20 @@ class TaskSpanRepository extends ServiceEntityRepository implements TaskSpanRepo
         parent::__construct($registry, TaskSpan::class);
     }
 
-    // Only one task should be running at the same time, so I get all the tasks which hasn't been ended, and I stop them.
-    public function stopRunningTask()
+    public function getRunningTaskSpan()
     {
-        $runningTasks = $this->findBy(array('stoped_at' => null));
+        return $this->findOneBy(array('stoped_at' => null));
+        
+    }
 
-        if(count($runningTasks))
+    // Only one task should be running at the same time, so I get all the tasks which hasn't been ended, and I stop them.
+    public function stopRunningTaskSpan()
+    {
+        $runningTask = $this->getRunningTaskSpan();
+
+        if($runningTask)
         {
-            foreach ($runningTasks as $runningTask)
-            {
-                $runningTask->stop();
-            }
+            $runningTask->stop();
         }
     }
 

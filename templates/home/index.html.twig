@@ -9,7 +9,11 @@
 </style>
 
 <div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    {% if (runningTaskSpan) %}
+        <h1>Task actually running : {{ runningTaskSpan.getTask().getName() }}</h1>
+    {% else %}
+        <h1>No task running actually</h1>
+    {% endif %}
 
     {{ form_start(form) }}
         {{ form_widget(form) }}

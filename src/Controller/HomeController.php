@@ -39,15 +39,20 @@ class HomeController extends AbstractController
             'method' => 'POST'
         ));
 
+        // Get the Task actually running
+        $runningTaskSpan = $this->taskSpanRepository->getRunningTaskSpan();
+
         // Get task's summary
         $summary = $this->taskSpanRepository->getSummary();
 
         // View
         return $this->render('home/index.html.twig', 
         array('controller_name' => 'HomeController',
-         'form' => $form->createView()
-         ,'summary' => $summary,
-         'stopTaskForm' => $stopTaskForm->createView())
+         'form' => $form->createView(),
+         'stopTaskForm' => $stopTaskForm->createView(),
+         'summary' => $summary,
+         'runningTaskSpan' => $runningTaskSpan
+         )
     );
     }
 }

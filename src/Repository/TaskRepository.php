@@ -45,7 +45,7 @@ class TaskRepository extends ServiceEntityRepository implements TaskRepositoryIn
         }
 
         // If a previous taskSpan hasn't be stopped, we stop it
-        $this->taskSpanRepository->stopRunningTask();
+        $this->taskSpanRepository->stopRunningTaskSpan();
 
         $em->persist($taskSpan);
     }
