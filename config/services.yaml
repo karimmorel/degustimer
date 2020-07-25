@@ -29,3 +29,9 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    App\Repository\TaskRepository : ~
+    App\Interfaces\TaskRepositoryInterface : '@App\Repository\TaskRepository'
+
+    App\Repository\TaskSpanRepository : ~
+    App\Interfaces\TaskSpanRepositoryInterface : '@App\Repository\TaskSpanRepository'

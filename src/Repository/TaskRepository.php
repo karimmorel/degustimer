@@ -7,6 +7,8 @@ use App\Entity\TaskSpan;
 use App\Repository\TaskSpanRepository;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use App\Interfaces\TaskRepositoryInterface;
+
 
 /**
  * @method Task|null find($id, $lockMode = null, $lockVersion = null)
@@ -14,7 +16,7 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Task[]    findAll()
  * @method Task[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class TaskRepository extends ServiceEntityRepository
+class TaskRepository extends ServiceEntityRepository implements TaskRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry, TaskSpanRepository $taskSpanRepository)
     {
