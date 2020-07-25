@@ -63,6 +63,7 @@ class TaskSpanRepository extends ServiceEntityRepository implements TaskSpanRepo
     {
         return $this->createQueryBuilder('ts')
         ->andWhere('ts.stoped_at IS NOT NULL')
+        ->orderBy('ts.id', 'DESC')
         ->getQuery()
         ->getResult();
     }
@@ -83,10 +84,10 @@ class TaskSpanRepository extends ServiceEntityRepository implements TaskSpanRepo
                 $date = $taskSpan->getCreatedAt(); 
             }
 
-            if($taskSpan->getCreatedAt()->format('d - m - Y') != $date->format('d - m - Y'))
+            if($taskSpan->getCreatedAt()->format('D, d M') != $date->format('D, d M'))
             {
                 $date = $taskSpan->getCreatedAt();
-                $summary[$date->format('d - m - Y')] = $dailySummary;
+                $summary[$date->format('D, d M')] = $dailySummary;
                 $dailySummary = array();
             }
 
@@ -102,7 +103,7 @@ class TaskSpanRepository extends ServiceEntityRepository implements TaskSpanRepo
                 $dailySummary[$taskSpan->getTask()->getName()] = $taskSpan->getTaskSpanInterval();
             }
         }
-                $summary[$date->format('d - m - Y')] = $dailySummary;
+                $summary[$date->format('D, d M')] = $dailySummary;
                 $dailySummary = array();
 
         return $summary;
@@ -132,7 +133,7 @@ class TaskSpanRepository extends ServiceEntityRepository implements TaskSpanRepo
             }
         }
 
-        return $interval->format('%h h : %i min : %s sec');
+        return $interval->format('%h:%I:%S');
 
     }
 

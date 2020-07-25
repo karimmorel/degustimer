@@ -1,47 +1,56 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Degustimer{% endblock %}
-
 {% block stylesheets %}
 
 {% endblock %}
 
 {% block body %}
 
-<div class="example-wrapper">
-    {% if (runningTaskSpan) %}
-        <h1>Task actually running : {{ runningTaskSpan.getTask().getName() }}</h1>
-    {% else %}
-        <h1>No task running actually</h1>
-    {% endif %}
+<div class="container">
 
-    <div class="container">
-    <p>Today, I have worked {{ todaysWorkingTime }}</p>
-    </div>
+<div class="title-container">
+    <h1>Degustimer</h1>
+</div>
 
-    {{ form_start(form) }}
+        {% if (runningTaskSpan) %}
+        <div id="task-actually-running">
+            <div class="running-task-name"><p>{{ runningTaskSpan.getTask().getName()[:25] }}</p></div>
+            <div class="timer"><p>00:00</p></div>
+            <div class="stop-button-container">
+                {{ form_start(stopTaskForm) }}
+                {{ form_widget(stopTaskForm) }}
+                    <input id="stop-button" class="submit-button" type="submit" value="Stop">
+                {{ form_end(stopTaskForm) }}
+            </div>
+        </div>
+        {% endif %}
+
+    {{ form_start(form, {'attr' : { 'class' : 'task-form'}}) }}
+        {{ form_row(form.name, {'label' : false, 'attr' : {'placeholder' : 'Task name', 'class' : 'name-input'}}) }}
         {{ form_widget(form) }}
-        <input type="submit" value="Start">
+        <input id="start-button" class="submit-button" type="submit" value="Start">
     {{ form_end(form) }}
 
-    {{ form_start(stopTaskForm) }}
-        {{ form_widget(stopTaskForm) }}
-        <input type="submit" value="Stop">
-    {{ form_end(stopTaskForm) }}
+</div>
 
-    {% for message in app.flashes('message') %}
-            <div class="alert alert-success">
-                {{ message }}
-            </div>
-    {% endfor %}
-</div>
-<div class="container">
+
+
+<div id="task-list" class="container">
     {% for day, dailySummary in summary %}
-        {{ day }}
+    <div class="task-daily-list">
+    <div class="task-list-day-container">
+        <div class="task-list-element-left"><p>{% if (today == day) %}Today</p></div><div class="task-list-element-right"><p>{{ todaysWorkingTime }}{% else %}{{ day }}{% endif %}</p></div>
+        </div>
         {% for taskName, taskSpanTime in dailySummary %}
-            {{ taskName }} : {{ taskSpanTime.format('%h:%i:%s') }}
+        <div class="task-list-task-container">
+            <div class="task-list-element-left"><p class="task">{{ taskName }}</p></div>  <div class="task-list-element-right"><p class="time">{{ taskSpanTime.format('%h:%I:%S') }}</p></div>
+        </div>
         {% endfor %}
+    </div>
     {% endfor %}
 </div>
+
+
+{% for message in app.flashes('message') %}<div class="notifier"><small>{{ message }}</small></div>{% endfor %}
 
 {% endblock %}

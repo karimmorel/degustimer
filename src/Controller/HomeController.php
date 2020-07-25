@@ -45,6 +45,7 @@ class HomeController extends AbstractController
 
         // Get task's summary
         $summary = $this->taskSpanRepository->getSummary();
+        $today = (new \DateTime)->format('D, d M');
 
         // View
         return $this->render('home/index.html.twig', 
@@ -53,7 +54,8 @@ class HomeController extends AbstractController
          'stopTaskForm' => $stopTaskForm->createView(),
          'summary' => $summary,
          'runningTaskSpan' => $runningTaskSpan,
-         'todaysWorkingTime' => $todaysWorkingTime
+         'todaysWorkingTime' => $todaysWorkingTime,
+         'today' => $today
          )
     );
     }
