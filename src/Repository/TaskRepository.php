@@ -50,6 +50,17 @@ class TaskRepository extends ServiceEntityRepository implements TaskRepositoryIn
         $em->persist($taskSpan);
     }
 
+
+    public function generateNewTaskFromCommandLine($taskName)
+    {
+        $em = $this->getEntityManager();
+
+        $task = new Task;
+        $task->setName($taskName);
+        $this->generateNewTask($task);
+        $em->flush();
+    }
+
     // /**
     //  * @return Task[] Returns an array of Task objects
     //  */

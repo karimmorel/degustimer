@@ -37,6 +37,27 @@ class TaskSpanRepository extends ServiceEntityRepository implements TaskSpanRepo
         }
     }
 
+    // As requested, for the command line I take in argument the name of the task, but I think it is not necessary because there is only one task running at a time
+    // That's why I did a different method for the command line event running stopRunningTaskSpan()
+    public function stopRunningTaskSpanFromCommandLine($taskName)
+    {
+        $em = $this->getEntityManager();
+        $return = false;
+        
+        $runningTask = $this->getRunningTaskSpan();
+        if($runningTask)
+        {
+            if($taskName == $runningTask->getTask()->getName())
+            {
+                $runningTask->stop();
+                $return = true;
+            }
+        }
+
+        $em->flush();
+        return $return;
+    }
+
     // Get TaskSpans only with a value on stopped_by
     public function findEndedTaskSpans()
     {
