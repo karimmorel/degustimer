@@ -1,0 +1,14 @@
+version: "3.1"
+
+services:
+  web:
+    image: mattrayner/lamp:latest-1604-php7
+    environment:
+      - MYSQL_USER_NAME=mysql
+      - MYSQL_USER_DB=mysql
+      - MYSQL_USER_PASS=mysql
+    ports:
+      - 8080:80
+    volumes:
+      - ~/mysql:/var/lib/mysql
+      - .
