@@ -21,9 +21,7 @@ class TaskController extends AbstractController
         $this->taskSpanRepository = $taskSpanRepository;
     }
 
-    /**
-     * @Route("/task/create", name="task.create")
-     */
+
     public function create(Request $request)
     {
         $entityManager = $this->getDoctrine()->getManager();
@@ -35,6 +33,9 @@ class TaskController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid())
         {
+            // Get running task before stopping it
+            $runningTask = $this->taskSpanRepository->getRunningTaskSpan();
+
             // Check if the task already exists and create a new TaskSpan
             $this->taskRepository->generateNewTask($task);
             $entityManager->flush();
@@ -49,11 +50,18 @@ class TaskController extends AbstractController
                     $taskName = substr($taskName, 0, 18).'...';
                 }
 
-                $response->setContent(json_encode([
+                $jsonArray = [
                     'message' => 'Task created',
                     'task_name' => $taskName,
                     'task_created' => $this->taskSpanRepository->getRunningTaskSpan()->getFormatedCreatedAt()
-                ]));
+                ];
+
+                if($runningTask)
+                {
+                    $jsonArray['taskinsummary'] = $this->taskSpanRepository->getNewTaskInView($runningTask);
+                }
+
+                $response->setContent(json_encode($jsonArray));
                 $response->headers->set('Content-Type', 'application/json');
                 return $response;
             }
@@ -66,6 +74,7 @@ class TaskController extends AbstractController
         return $this->redirectToRoute('home');
     }
 
+
     public function stop(Request $request)
     {
         $entityManager = $this->getDoctrine()->getManager();
@@ -76,6 +85,9 @@ class TaskController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid())
         {
+            // Get running task before stopping it
+            $runningTask = $this->taskSpanRepository->getRunningTaskSpan();
+
             // Check if the task already exists and create a new TaskSpan
             $this->taskSpanRepository->stopRunningTaskSpan();
             $this->addFlash('message', 'Task stopped');
@@ -85,9 +97,17 @@ class TaskController extends AbstractController
             if ($request->isXmlHttpRequest())
             {
                 $response = new Response();
-                $response->setContent(json_encode([
+
+                $jsonArray = [
                     'message' => 'Task stopped'
-                ]));
+                ];
+
+                if($runningTask)
+                {
+                    $jsonArray['taskinsummary'] = $this->taskSpanRepository->getNewTaskInView($runningTask);
+                }
+
+                $response->setContent(json_encode($jsonArray));
                 $response->headers->set('Content-Type', 'application/json');
                 return $response;
             }

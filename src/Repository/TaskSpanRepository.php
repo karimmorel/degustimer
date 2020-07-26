@@ -23,7 +23,7 @@ class TaskSpanRepository extends ServiceEntityRepository implements TaskSpanRepo
     public function getRunningTaskSpan()
     {
         return $this->findOneBy(array('stopped_at' => null));
-        
+    
     }
 
     // Only one task should be running at the same time, so I get all the tasks which hasn't been ended, and I stop them.
@@ -135,6 +135,24 @@ class TaskSpanRepository extends ServiceEntityRepository implements TaskSpanRepo
 
         return $interval ? $interval->format('%h:%I:%S'): '00:00:00';
 
+    }
+
+    public function getNewTaskInView($runningTask)
+    {
+        $summary = $this->getSummary();
+        $today = (new \DateTime)->format('D, d M');
+
+        if($summary[$today] && $summary[$today][$runningTask->getTask()->getName()])
+        {
+            $returnArray = array(
+                'name' => $runningTask->getTask()->getName(),
+                'time' => $summary[$today][$runningTask->getTask()->getName()]->format('%h:%I:%S'),
+                'today' => $this->getTodaysWorkingTime()
+            );
+
+            return $returnArray;
+        }
+        return null;
     }
 
     // Add Two intervals to create one object Interval

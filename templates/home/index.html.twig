@@ -35,9 +35,9 @@
 
 <div id="task-list" class="container">
     {% for day, dailySummary in summary %}
-    <div class="task-daily-list">
+    <div class="task-daily-list{% if (today == day) %} today-task-list{% endif %}">
     <div class="task-list-day-container">
-        <div class="task-list-element-left"><p>{% if (today == day) %}Today</p></div><div class="task-list-element-right"><p>{{ todaysWorkingTime }}{% else %}{{ day }}{% endif %}</p></div>
+        <div class="task-list-element-left"><p>{% if (today == day) %}Today</p></div><div class="task-list-element-right today-total-time"><p>{{ todaysWorkingTime }}{% else %}{{ day }}{% endif %}</p></div>
         </div>
         {% for taskName, taskSpanTime in dailySummary %}
         <div class="task-list-task-container">
@@ -82,6 +82,7 @@
 
     }
 
+    // Manage the timer bar positions
     function downTimerBar ()
     {
         $('#task-actually-running').css({'margin-top' : 0});
@@ -93,6 +94,26 @@
         $('#task-actually-running').css({'margin-top' : 0-height+'px'});
     }
 
+    // Add a new task to the summary
+    function addNewTask(task)
+    {
+        // Check all today's task, remove the one with the same name
+        $('.today-task-list .task-list-task-container').each(function(){
+            if($(this).find('.task').text() == task.name)
+            {
+                $(this).remove();
+                return false
+            }
+        });
+
+        // Changing the total timer of the day
+        $('.today-total-time p').html(task.today);
+
+        // Add the task to the list
+        $('.today-task-list .task-list-day-container').after('<div class="task-list-task-container"><div class="task-list-element-left"><p class="task">'+task.name+'</p></div>  <div class="task-list-element-right"><p class="time">'+task.time+'</p></div></div>');
+    }
+
+    // Change the h1 during 5 seconds to show a notification
     function temporaryChangeTitle(titleText)
     {
         $('h1').html(titleText);
@@ -148,6 +169,12 @@
                     $('#task_name').val('');
                     temporaryTitle = temporaryChangeTitle(data.message);
                     degustInterval = setDegustimer(data.task_created);
+                    
+                    // If a previous task has been ended, we add it to the summary
+                    if(data.taskinsummary)
+                    {
+                        addNewTask(data.taskinsummary);
+                    }
                     downTimerBar();
                     $('#start-button').prop( "disabled", false );
                 },
@@ -179,6 +206,13 @@
                     $('.running-task-name p').html('No task running actually.');
                     $('.timer p').html('00:00');
                     temporaryTitle = temporaryChangeTitle(data.message);
+
+                    // If a previous task has been ended, we add it to the summary
+                    if(data.taskinsummary)
+                    {
+                        addNewTask(data.taskinsummary);
+                    }
+
                     degustInterval = setDegustimer(data.task_created);
                     $('#start-button').prop( "disabled", false );
                 },
