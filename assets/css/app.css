@@ -34,6 +34,8 @@ body
 /** Running task **/
 #task-actually-running
 {
+    transition: margin-top .4s ease;
+    position:relative;
     width:100%;
     background-color:white;
     min-height:50px;
@@ -42,6 +44,13 @@ body
     display:flex;
     flex-wrap: nowrap;
     flex-direction: row;
+    z-index:1;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-weight: 100;
+}
+.running-task-bar-up
+{
+    margin-top:-50px;
 }
 #task-actually-running p 
 {
@@ -122,6 +131,11 @@ form input
 }
 
 /** Container **/
+.container
+{
+    z-index:10;
+    position:relative;
+}
 .container p
 {
     font-size:16px;

@@ -10,6 +10,7 @@ use App\Interfaces\TaskSpanRepositoryInterface;
 use App\Form\TaskType;
 use App\Form\StopTaskType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class TaskController extends AbstractController
 {
@@ -38,8 +39,22 @@ class TaskController extends AbstractController
             $this->taskRepository->generateNewTask($task);
             $this->addFlash('message', 'New task saved : '.$task->getName());
             $entityManager->flush();
+
+            // View or Ajax
+            if ($request->isXmlHttpRequest())
+            {
+                $response = new Response();
+                $response->setContent(json_encode([
+                    'message' => 'Task created',
+                    'task_name' => $task->getName(),
+                    'task_created' => $this->taskSpanRepository->getRunningTaskSpan()->getFormatedCreatedAt()
+                ]));
+                $response->headers->set('Content-Type', 'application/json');
+                return $response;
+            }
         }
 
+        
         return $this->redirectToRoute('home');
     }
 

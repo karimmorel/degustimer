@@ -7,14 +7,13 @@
 {% block body %}
 
 <div class="container">
-
 <div class="title-container">
     <h1>Degustimer</h1>
 </div>
+</div>
 
-        {% if (runningTaskSpan) %}
-        <div id="task-actually-running">
-            <div class="running-task-name"><p>{{ runningTaskSpan.getTask().getName()[:25] }}</p></div>
+        <div id="task-actually-running" class="{% if (runningTaskSpan is null) %}running-task-bar-up{% endif %}">
+            <div class="running-task-name"><p>{% if (runningTaskSpan) %}{{ runningTaskSpan.getTask().getName()[:25] }}{% endif %}</p></div>
             <div class="timer"><p>00:00</p></div>
             <div class="stop-button-container">
                 {{ form_start(stopTaskForm) }}
@@ -23,15 +22,14 @@
                 {{ form_end(stopTaskForm) }}
             </div>
         </div>
-        {% endif %}
+        </div>
+        
 
-    {{ form_start(form, {'attr' : { 'class' : 'task-form'}}) }}
+    {{ form_start(form, {'attr' : {'id' : 'create-task-form', 'class' : 'task-form'}}) }}
         {{ form_row(form.name, {'label' : false, 'attr' : {'placeholder' : 'Task name', 'class' : 'name-input'}}) }}
         {{ form_widget(form) }}
         <input id="start-button" class="submit-button" type="submit" value="Start">
     {{ form_end(form) }}
-
-</div>
 
 
 
@@ -48,7 +46,6 @@
         {% endfor %}
     </div>
     {% endfor %}
-</div>
 
 
 {% for message in app.flashes('message') %}<div class="notifier"><small>{{ message }}</small></div>{% endfor %}
@@ -60,18 +57,18 @@
 {% block javascripts %}
     <script>
 
+    // Launch Timer
      function setDegustimer (initialTime = null) {
+        if(initialTime != null)
+        {
+            var mySetInterval = setInterval(function() {
+                refreshTimer(initialTime);
+            }, 1000);
+        }
+        return mySetInterval;
+        }
 
-    if(initialTime != null)
-    {
-        var mySetInterval = setInterval(function() {
-            refreshTimer(initialTime);
-        }, 1000);
-    }
-
-    return mySetInterval;
-    }
-
+    // Calculate the actual time on the timer
     function refreshTimer (initialInterval)
     {
         var date1 = Date.now();
@@ -85,10 +82,29 @@
 
     }
 
+    function downTimerBar ()
+    {
+        $('#task-actually-running').css({'margin-top' : 0});
+    }
+
+    function upTimerBar ()
+    {
+        $('#task-actually-running').css({'margin-top' : '-50px'});
+    }
+
+    function temporaryChangeTitle(titleText)
+    {
+        $('h1').html(titleText);
+        setTimeout(function(){
+            $('h1').html('Degustimer');
+        },8000);
+    }
+
+    // Intialization
     $(document).ready(function(){
 
         {% if (runningTaskSpan) %}
-        var interval = '{{ runningTaskSpan.getCreatedAt().format('F d, Y H:i:s') }}';
+        var interval = '{{ runningTaskSpan.getFormatedCreatedAt() }}';
         {% else %}
         var interval = null;
         {% endif %}
@@ -97,13 +113,42 @@
 
         var degustInterval = setDegustimer(interval);
 
+        // On click on a button, we stop the timer
         $('.submit-button').click(function(){
             clearInterval(degustInterval);
+            upTimerBar();
         });
 
+        // Remove notifications at the end of 8 secondes since initialization
         setTimeout(function(){
             $('.notifier').fadeOut();
-        },8000);
+        },5000);
+
+        // Ajax for creating a new task
+        $("#create-task-form").submit(function(e) {
+
+            e.preventDefault();
+
+            var form = $(this);
+            var url = "{{ path('task.create') }}";
+            $('h1').html('loading..');
+
+    
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: form.serialize(), // serializes the form's elements.
+                success: function(data)
+                {
+                    $('.running-task-name p').html(data.task_name);
+                    temporaryChangeTitle(data.message);
+                    degustInterval = setDegustimer(data.task_created);
+                    downTimerBar();
+                }
+         });
+
+    
+    });
 
     });
 
