@@ -22,7 +22,7 @@ There is a docker-compose file in the root of the project. So to start the conta
 > **docker-compose up**<br/>
 
 When the container is completely initialized, the application should be accessible on <a target="_blank" href="http://localhost:80">localhost</a>, on the port 80.
-But the database is not set, I need you to use doctrine to migrate the database.
+But the database and composer are not set, I need you to use doctrine to migrate the database.
 So you have to connect to your container :
 > **docker exec -ti <name_of_the_container> bin/bash**<br/>
 
