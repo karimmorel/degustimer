@@ -7,8 +7,8 @@ I hope you will like it, I tried to give the best of me in the allotted time.
 
 I uploaded the project in a <a target="_blank" href="https://github.com/karimmorel/degustimer">GitHub repository</a>, as requested.
 You can clone it directly on a local repository.
->**cd myfavoriterepository**
->**git clone https://github.com/karimmorel/degustimer.git**
+>**cd myfavoriterepository**<br/>
+>**git clone https://github.com/karimmorel/degustimer.git**<br/>
 
 Because I am more used to Gitlab, I will also upload it on my <a target="_blank" href="https://gitlab.com/karimmorelGitlab">Gitlab Account.</a>
 
@@ -18,17 +18,17 @@ For this project, I set up a docker image that helps you to deploy the applicati
 You can find the repository of this image on <a target="_blank" href="https://hub.docker.com/repository/docker/karimmorel/degustimer">DockerHub.</a>
 There is a docker-compose file in the root of the project. So to start the container, a "docker-compose up" in the repository containing the project locally should work. 
 (He will need the port 80, if you want it to use another port, you can edit the docker-compose.yml)
-> **docker-compose up**
+> **docker-compose up**<br/>
 
 When the container is completely initialized, the application should be accessible on <a target="_blank" href="http://localhost:80">localhost</a>, on the port 80.
 But the database is not set, I need you to use doctrine to migrate the database.
 So you have to connect to your container :
-> **docker exec -ti <name_of_the_container> bin/bash**
+> **docker exec -ti <name_of_the_container> bin/bash**<br/>
 
 The container's name should be something like : degustabox_degustamer_1
 
 And to use doctrine :
-> **cd /app**
+> **cd /app**<br/>
 > **php bin/console doctrine:migrations:migrate**
 
 Now the application should be accessible : <a target="_blank" href="http://localhost:80">localhost</a>
@@ -51,13 +51,13 @@ I tried to make the application as SOLID as possible, while implementing as much
 ## One step further
 
 I added some commands accessible in the container :
-> **docker exec -ti <name_of_the_container> bin/bash**
-> **cd /app**
-> **php bin/console task:start "Name of the task"**
-or
-> **php bin/console task:stop "Name of the task"**
-or
-> **php bin/console task:list**
+> **docker exec -ti <name_of_the_container> bin/bash**<br/>
+> **cd /app**<br/>
+> **php bin/console task:start "Name of the task"**<br/>
+or<br/>
+> **php bin/console task:stop "Name of the task"**<br/>
+or<br/>
+> **php bin/console task:list**<br/>
 
 As I specified it in the comments of the command script, I added to the task:stop an argument "Name of the task" because it was requested in the exercise, but I don't know if it is necessary because there is only one task running at a time.
 So here the argument is used to be sure the user wants to stop the running task, if he enters a wrong task name, the running task continues.
