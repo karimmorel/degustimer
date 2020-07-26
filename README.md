@@ -49,6 +49,12 @@ I tried to make the application working on each navigator, on phone or on a desk
 
 For this exercise, I have been using Symfony 4.4.10 with mysql.
 I tried to make the application as SOLID as possible, while implementing as much functionalities as I could.
+I left the dev environment, in case you want to use the debugbar.
+
+## PhpMyAdmin
+I don't know if you will need it, but <a target="_blank" href="http://localhost/phpmyadmin">PhpMyAdmin</a> is accessible :
+User : degustadmin
+Password : degustadmin
 
 ## One step further
 
