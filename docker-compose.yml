@@ -2,13 +2,12 @@ version: "3.1"
 
 services:
   web:
-    image: mattrayner/lamp:latest-1604-php7
+    image: karimmorel/degustimer
     environment:
-      - MYSQL_USER_NAME=mysql
-      - MYSQL_USER_DB=mysql
-      - MYSQL_USER_PASS=mysql
+      - MYSQL_USER_NAME=degustadmin
+      - MYSQL_USER_DB=degustabase
+      - MYSQL_USER_PASS=degustadmin
     ports:
-      - 8080:80
+      - 80:80
     volumes:
-      - ~/mysql:/var/lib/mysql
-      - .
+      - "./../degustabox:/app"

@@ -22,7 +22,7 @@ class TaskSpanRepository extends ServiceEntityRepository implements TaskSpanRepo
 
     public function getRunningTaskSpan()
     {
-        return $this->findOneBy(array('stoped_at' => null));
+        return $this->findOneBy(array('stopped_at' => null));
         
     }
 
@@ -62,7 +62,7 @@ class TaskSpanRepository extends ServiceEntityRepository implements TaskSpanRepo
     public function findEndedTaskSpans()
     {
         return $this->createQueryBuilder('ts')
-        ->andWhere('ts.stoped_at IS NOT NULL')
+        ->andWhere('ts.stopped_at IS NOT NULL')
         ->orderBy('ts.id', 'DESC')
         ->getQuery()
         ->getResult();
@@ -77,24 +77,17 @@ class TaskSpanRepository extends ServiceEntityRepository implements TaskSpanRepo
         $summary = array();
         $dailySummary = array();
 
-        foreach ($taskSpanList as $taskSpan)
+        foreach ($taskSpanList as $key => $taskSpan)
         {
             if($date == null)
             {
                 $date = $taskSpan->getCreatedAt(); 
             }
 
-            if($taskSpan->getCreatedAt()->format('D, d M') != $date->format('D, d M'))
-            {
-                $date = $taskSpan->getCreatedAt();
-                $summary[$date->format('D, d M')] = $dailySummary;
-                $dailySummary = array();
-            }
-
             if(array_key_exists($taskSpan->getTask()->getName(), $dailySummary))
             {
 
-                $interval = $this->addIntervals($dailySummary[$taskSpan->getTask()->getName()], $taskSpan->getTaskSpanInterval());
+                $interval = $this->sumIntervals($dailySummary[$taskSpan->getTask()->getName()], $taskSpan->getTaskSpanInterval());
 
                 $dailySummary[$taskSpan->getTask()->getName()] = $interval;
             }
@@ -102,9 +95,15 @@ class TaskSpanRepository extends ServiceEntityRepository implements TaskSpanRepo
             {
                 $dailySummary[$taskSpan->getTask()->getName()] = $taskSpan->getTaskSpanInterval();
             }
-        }
+
+            if($taskSpan->getCreatedAt()->format('D, d M') != $date->format('D, d M') || $key == count($taskSpanList)-1)
+            {
                 $summary[$date->format('D, d M')] = $dailySummary;
+                $date = $taskSpan->getCreatedAt();
                 $dailySummary = array();
+            }
+
+        }
 
         return $summary;
     }
@@ -113,8 +112,8 @@ class TaskSpanRepository extends ServiceEntityRepository implements TaskSpanRepo
     public function getTodaysWorkingTime()
     {
         $taskSpanList = $this->createQueryBuilder('ts')
-        ->andWhere('ts.stoped_at IS NOT NULL')
-        ->andWhere('ts.created_at LIKE :currentdate')
+        ->andWhere('ts.stopped_at IS NOT NULL')
+        ->andWhere('ts.stopped_at LIKE :currentdate')
         ->setParameter('currentdate', '%'.(new \DateTime)->format('Y-m-d').'%')
         ->getQuery()
         ->getResult();
@@ -125,20 +124,21 @@ class TaskSpanRepository extends ServiceEntityRepository implements TaskSpanRepo
         {
             if($interval != null)
             {
-                $interval = $this->addIntervals($interval, $taskSpan->getCreatedAt()->diff($taskSpan->getStoppedAt()));
+                $interval = $this->sumIntervals($interval, $taskSpan->getCreatedAt()->diff($taskSpan->getStoppedAt()));
             }
             else
             {
                 $interval = $taskSpan->getCreatedAt()->diff($taskSpan->getStoppedAt());
             }
         }
+        
 
-        return $interval->format('%h:%I:%S');
+        return $interval ? $interval->format('%h:%I:%S'): '00:00:00';
 
     }
 
     // Add Two intervals to create one object Interval
-    protected function addIntervals($firstInterval, $secondInterval)
+    protected function sumIntervals($firstInterval, $secondInterval)
     {
         $e = new \DateTime;
         $f = clone $e;

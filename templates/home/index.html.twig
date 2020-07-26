@@ -54,3 +54,59 @@
 {% for message in app.flashes('message') %}<div class="notifier"><small>{{ message }}</small></div>{% endfor %}
 
 {% endblock %}
+
+
+
+{% block javascripts %}
+    <script>
+
+     function setDegustimer (initialTime = null) {
+
+    if(initialTime != null)
+    {
+        var mySetInterval = setInterval(function() {
+            refreshTimer(initialTime);
+        }, 1000);
+    }
+
+    return mySetInterval;
+    }
+
+    function refreshTimer (initialInterval)
+    {
+        var date1 = Date.now();
+        var date2 = new Date(initialInterval);
+        var diffTime = Math.abs(date2 - date1);
+        var diffTimeInSecond = diffTime/1000;
+
+        timerValue = diffTimeInSecond.toString().toHHMMSS();
+
+        $('.timer p').html(timerValue);
+
+    }
+
+    $(document).ready(function(){
+
+        {% if (runningTaskSpan) %}
+        var interval = '{{ runningTaskSpan.getCreatedAt().format('F d, Y H:i:s') }}';
+        {% else %}
+        var interval = null;
+        {% endif %}
+
+        refreshTimer(interval);
+
+        var degustInterval = setDegustimer(interval);
+
+        $('.submit-button').click(function(){
+            clearInterval(degustInterval);
+        });
+
+        setTimeout(function(){
+            $('.notifier').fadeOut();
+        },8000);
+
+    });
+
+    
+    </script>
+{% endblock %}

@@ -31,7 +31,7 @@ class TaskSpan
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private $stoped_at;
+    private $stopped_at;
 
     public function __construct()
     {
@@ -69,7 +69,7 @@ class TaskSpan
 
     public function getStoppedAt(): ?\DateTimeInterface
     {
-        return $this->stoped_at;
+        return $this->stopped_at;
     }
 
     public function stop()
@@ -77,9 +77,9 @@ class TaskSpan
         return $this->setStoppedAt(new \DateTime);
     }
 
-    public function setStoppedAt(?\DateTimeInterface $stoped_at): self
+    public function setStoppedAt(?\DateTimeInterface $stopped_at): self
     {
-        $this->stoped_at = $stoped_at;
+        $this->stopped_at = $stopped_at;
 
         return $this;
     }

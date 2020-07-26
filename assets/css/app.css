@@ -84,7 +84,7 @@ form .name-input
     padding:12px;
     box-sizing:border-box;
     border-radius:3px 0 0 3px;
-    color:#ccc;
+    color:#344433;
     font-family: 'Noto Sans JP', sans-serif;
 }
 .task-form>div:first-child
@@ -109,6 +109,8 @@ form input
     border-radius:0 3px 3px 0;
     font-weight: 100;
     font-family: 'Noto Sans JP', sans-serif;
+    cursor:pointer;
+    outline:none;
 }
 #start-button
 {
@@ -197,6 +199,9 @@ form input
     left:5%;
     color:#222;
     box-sizing:border-box;
+    -webkit-box-shadow: 10px 9px 24px -10px rgba(0,0,0,1);
+    -moz-box-shadow: 10px 9px 24px -10px rgba(0,0,0,1);
+    box-shadow: 10px 9px 24px -10px rgba(0,0,0,1);
 }
 
 
