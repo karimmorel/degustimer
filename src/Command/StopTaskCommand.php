@@ -34,6 +34,8 @@ class StopTaskCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        date_default_timezone_set('Europe/Paris');
+
         $stopped = $this->taskSpanRepository->stopRunningTaskSpanFromCommandLine($input->getArgument('taskname'));
 
         if($stopped)

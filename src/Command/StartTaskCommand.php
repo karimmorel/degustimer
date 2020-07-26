@@ -34,6 +34,8 @@ class StartTaskCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        date_default_timezone_set('Europe/Paris');
+        
         $this->taskRepository->generateNewTaskFromCommandLine($input->getArgument('taskname'));
 
         $output->writeln('Task created.');
