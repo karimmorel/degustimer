@@ -37,7 +37,6 @@ class TaskController extends AbstractController
         {
             // Check if the task already exists and create a new TaskSpan
             $this->taskRepository->generateNewTask($task);
-            $this->addFlash('message', 'New task saved : '.$task->getName());
             $entityManager->flush();
 
             // View or Ajax
@@ -52,6 +51,9 @@ class TaskController extends AbstractController
                 $response->headers->set('Content-Type', 'application/json');
                 return $response;
             }
+
+            // Notification
+            $this->addFlash('message', 'New task saved : '.$task->getName());
         }
 
         
@@ -72,6 +74,20 @@ class TaskController extends AbstractController
             $this->taskSpanRepository->stopRunningTaskSpan();
             $this->addFlash('message', 'Task stopped');
             $entityManager->flush();
+
+            // View or Ajax
+            if ($request->isXmlHttpRequest())
+            {
+                $response = new Response();
+                $response->setContent(json_encode([
+                    'message' => 'Task stopped'
+                ]));
+                $response->headers->set('Content-Type', 'application/json');
+                return $response;
+            }
+
+            // Notification
+            $this->addFlash('message', 'Task stopped');
         }
 
         return $this->redirectToRoute('home');

@@ -16,7 +16,7 @@
             <div class="running-task-name"><p>{% if (runningTaskSpan) %}{{ runningTaskSpan.getTask().getName()[:25] }}{% endif %}</p></div>
             <div class="timer"><p>00:00</p></div>
             <div class="stop-button-container">
-                {{ form_start(stopTaskForm) }}
+                {{ form_start(stopTaskForm, {'attr' : {'id' : 'stop-task-form'}}) }}
                 {{ form_widget(stopTaskForm) }}
                     <input id="stop-button" class="submit-button" type="submit" value="Stop">
                 {{ form_end(stopTaskForm) }}
@@ -95,9 +95,9 @@
     function temporaryChangeTitle(titleText)
     {
         $('h1').html(titleText);
-        setTimeout(function(){
+        return setTimeout(function(){
             $('h1').html('Degustimer');
-        },8000);
+        },5000);
     }
 
     // Intialization
@@ -108,6 +108,7 @@
         {% else %}
         var interval = null;
         {% endif %}
+        var temporaryTitle;
 
         refreshTimer(interval);
 
@@ -122,15 +123,17 @@
         // Remove notifications at the end of 8 secondes since initialization
         setTimeout(function(){
             $('.notifier').fadeOut();
-        },5000);
+        },8000);
 
         // Ajax for creating a new task
         $("#create-task-form").submit(function(e) {
 
             e.preventDefault();
+            $('#start-button').prop( "disabled", true );
 
             var form = $(this);
             var url = "{{ path('task.create') }}";
+            clearInterval(temporaryTitle);
             $('h1').html('loading..');
 
     
@@ -141,17 +144,49 @@
                 success: function(data)
                 {
                     $('.running-task-name p').html(data.task_name);
-                    temporaryChangeTitle(data.message);
+                    temporaryTitle = temporaryChangeTitle(data.message);
                     degustInterval = setDegustimer(data.task_created);
                     downTimerBar();
+                    $('#start-button').prop( "disabled", false );
+                },
+                error: function(err){
+                    temporaryChangeTitle(err.responseText);
+                    $('#start-button').prop( "disabled", false );
                 }
          });
-
-    
     });
 
+
+         // Ajax for stopping a running task
+        $("#stop-task-form").submit(function(e) {
+
+            e.preventDefault();
+            $('#start-button').prop( "disabled", true );
+
+            var form = $(this);
+            var url = "{{ path('task.stop') }}";
+            clearInterval(temporaryTitle);
+            $('h1').html('loading..');
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: form.serialize(), // serializes the form's elements.
+                success: function(data)
+                {
+                    $('.running-task-name p').html('');
+                    $('.timer p').html('');
+                    temporaryTitle = temporaryChangeTitle(data.message);
+                    degustInterval = setDegustimer(data.task_created);
+                    $('#start-button').prop( "disabled", false );
+                },
+                error: function(err){
+                    temporaryChangeTitle(err.responseText);
+                    $('#start-button').prop( "disabled", false );
+                }
+         });
+        });
     });
 
-    
     </script>
 {% endblock %}
