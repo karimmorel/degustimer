@@ -42,7 +42,7 @@ Now the application should be accessible : <a target="_blank" href="http://local
 With this project, I tried to do the exercise you sent me as seriously as possible.
 There is may be things that can vary with what you were expecting, I did the application as I understood it.
 
-For example, in my application, there is only one task running at a time (like in Toggl). When you add a new task and there is already one running, the previous stops automatically.
+For example, in my application, there is only one task running at a time (like in Toggl). When you add a new task and there is already one running, the previous one stops automatically.
 
 I tried to make the application working on each navigator, on phone or on a desktop, with or without javascript (of course, the timer wont work without javascript).
 
