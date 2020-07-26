@@ -9,6 +9,7 @@ I uploaded the project in a <a target="_blank" href="https://github.com/karimmor
 You can clone it directly on a local repository.
 >**cd myfavoriterepository**<br/>
 >**git clone https://github.com/karimmorel/degustimer.git**<br/>
+>**cd degustimer**<br/>
 
 Because I am more used to Gitlab, I will also upload it on my <a target="_blank" href="https://gitlab.com/karimmorelGitlab">Gitlab Account.</a>
 
