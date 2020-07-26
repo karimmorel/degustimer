@@ -52,9 +52,9 @@ I tried to make the application as SOLID as possible, while implementing as much
 I left the dev environment, in case you want to use the debugbar.
 
 ## PhpMyAdmin
-I don't know if you will need it, but <a target="_blank" href="http://localhost/phpmyadmin">PhpMyAdmin</a> is accessible :
-User : degustadmin
-Password : degustadmin
+I don't know if you will need it, but <a target="_blank" href="http://localhost/phpmyadmin">PhpMyAdmin</a> is accessible :<br/>
+User : degustadmin<br/>
+Password : degustadmin<br/>
 
 ## One step further
 
