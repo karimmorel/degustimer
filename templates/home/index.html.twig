@@ -14,7 +14,7 @@
 
         <div id="task-actually-running" class="{% if (runningTaskSpan is null) %}running-task-bar-up{% endif %}">
             <div class="running-task-name"><p>{% if (runningTaskSpan) %}{{ runningTaskSpan.getTask().getName()[:25] }}{% endif %}</p></div>
-            <div class="timer"><p>00:00</p></div>
+            <div class="timer"><p>00:00:00</p></div>
             <div class="stop-button-container">
                 {{ form_start(stopTaskForm, {'attr' : {'id' : 'stop-task-form'}}) }}
                 {{ form_widget(stopTaskForm) }}
@@ -127,14 +127,12 @@
 
         {% if (runningTaskSpan) %}
         var interval = '{{ runningTaskSpan.getFormatedCreatedAt() }}';
+        var degustInterval = setDegustimer(interval);
         {% else %}
         var interval = Date.now();
         {% endif %}
         var temporaryTitle;
 
-        refreshTimer(interval);
-
-        var degustInterval = setDegustimer(interval);
 
         // On click on a button, we stop the timer
         $('.submit-button').click(function(){
@@ -165,6 +163,8 @@
                 data: form.serialize(), // serializes the form's elements.
                 success: function(data)
                 {
+                    $('.timer p').html('00:00:00');
+
                     $('.running-task-name p').html(data.task_name);
                     $('#task_name').val('');
                     temporaryTitle = temporaryChangeTitle(data.message);
@@ -179,6 +179,8 @@
                     $('#start-button').prop( "disabled", false );
                 },
                 error: function(err){
+                    $('.timer p').html('00:00:00');
+
                     temporaryChangeTitle(err.responseText);
                     $('#start-button').prop( "disabled", false );
                 }
@@ -203,6 +205,8 @@
                 data: form.serialize(), // serializes the form's elements.
                 success: function(data)
                 {
+                     $('.timer p').html('00:00:00');
+
                     $('.running-task-name p').html('No task running actually.');
                     $('.timer p').html('00:00');
                     temporaryTitle = temporaryChangeTitle(data.message);
@@ -217,6 +221,8 @@
                     $('#start-button').prop( "disabled", false );
                 },
                 error: function(err){
+                    $('.timer p').html('00:00:00');
+
                     temporaryChangeTitle(err.responseText);
                     $('#start-button').prop( "disabled", false );
                 }

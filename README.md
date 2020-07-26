@@ -18,6 +18,7 @@ For this project, I set up a docker image that helps you to deploy the applicati
 You can find the repository of this image on <a target="_blank" href="https://hub.docker.com/repository/docker/karimmorel/degustimer">DockerHub.</a>
 There is a docker-compose file in the root of the project. So to start the container, a "docker-compose up" in the repository containing the project locally should work. 
 (He will need the port 80, if you want it to use another port, you can edit the docker-compose.yml)
+> **docker pull karimmorel/degustimer**<br/>
 > **docker-compose up**<br/>
 
 When the container is completely initialized, the application should be accessible on <a target="_blank" href="http://localhost:80">localhost</a>, on the port 80.
@@ -29,6 +30,7 @@ The container's name should be something like : degustabox_degustamer_1
 
 And to use doctrine :
 > **cd /app**<br/>
+> **composer install**<br/>
 > **php bin/console doctrine:migrations:migrate**
 
 Now the application should be accessible : <a target="_blank" href="http://localhost:80">localhost</a>
