@@ -89,7 +89,8 @@
 
     function upTimerBar ()
     {
-        $('#task-actually-running').css({'margin-top' : '-50px'});
+        var height = $('#task-actually-running').height();
+        $('#task-actually-running').css({'margin-top' : 0-height+'px'});
     }
 
     function temporaryChangeTitle(titleText)
@@ -106,7 +107,7 @@
         {% if (runningTaskSpan) %}
         var interval = '{{ runningTaskSpan.getFormatedCreatedAt() }}';
         {% else %}
-        var interval = null;
+        var interval = Date.now();
         {% endif %}
         var temporaryTitle;
 
@@ -144,6 +145,7 @@
                 success: function(data)
                 {
                     $('.running-task-name p').html(data.task_name);
+                    $('#task_name').val('');
                     temporaryTitle = temporaryChangeTitle(data.message);
                     degustInterval = setDegustimer(data.task_created);
                     downTimerBar();
@@ -174,8 +176,8 @@
                 data: form.serialize(), // serializes the form's elements.
                 success: function(data)
                 {
-                    $('.running-task-name p').html('');
-                    $('.timer p').html('');
+                    $('.running-task-name p').html('No task running actually.');
+                    $('.timer p').html('00:00');
                     temporaryTitle = temporaryChangeTitle(data.message);
                     degustInterval = setDegustimer(data.task_created);
                     $('#start-button').prop( "disabled", false );
@@ -186,6 +188,16 @@
                 }
          });
         });
+    });
+
+
+    // If the window is resized, we adjust the margin-top of the running task container
+    $(window).resize(function(){
+        var margintopValue = $('#task-actually-running').css('margin-top');
+        if (margintopValue != '0px')
+        {
+            upTimerBar();
+        }
     });
 
     </script>

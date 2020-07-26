@@ -43,9 +43,15 @@ class TaskController extends AbstractController
             if ($request->isXmlHttpRequest())
             {
                 $response = new Response();
+                $taskName = $task->getName();
+                if(strlen($taskName) > 18)
+                {
+                    $taskName = substr($taskName, 0, 18).'...';
+                }
+
                 $response->setContent(json_encode([
                     'message' => 'Task created',
-                    'task_name' => $task->getName(),
+                    'task_name' => $taskName,
                     'task_created' => $this->taskSpanRepository->getRunningTaskSpan()->getFormatedCreatedAt()
                 ]));
                 $response->headers->set('Content-Type', 'application/json');

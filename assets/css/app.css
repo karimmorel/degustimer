@@ -62,6 +62,10 @@ body
     text-align:left;
     padding-left:16px;
 }
+.running-task-name p
+{
+    text-overflow: ellipsis;
+}
 .timer
 {
     flex:1;
@@ -165,9 +169,11 @@ form input
     display:flex;
     flex-direction: row;
     flex-wrap: nowrap;
+    word-break:break-all
 }
 .task-list-task-container
 {
+    position:relative;
     border-top:1px solid #EEE;
     background-color:white;
 }
@@ -184,6 +190,10 @@ form input
 .task-list-element-left
 {
     flex:4;
+}
+.task-list-element-left p
+{
+    text-overflow: ellipsis;
 }
 .task-list-element-right
 {
@@ -216,6 +226,21 @@ form input
     -webkit-box-shadow: 10px 9px 24px -10px rgba(0,0,0,1);
     -moz-box-shadow: 10px 9px 24px -10px rgba(0,0,0,1);
     box-shadow: 10px 9px 24px -10px rgba(0,0,0,1);
+}
+
+
+/** Media queries **/
+@media only screen and (max-width: 767px) {
+    #task-actually-running
+    {
+        word-break:break-all; 
+        flex-direction: column;
+    }
+    .running-task-name
+    {
+        text-align:center;
+        padding:0;
+    }
 }
 
 
