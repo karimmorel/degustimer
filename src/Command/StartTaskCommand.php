@@ -34,8 +34,10 @@ class StartTaskCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        // Resolving an issue --> the timezone was different when adding/stoping a task with command line or in classic request to the controller
+        // I know there must be better solutions, but here, it works
         date_default_timezone_set('Europe/Paris');
-        
+
         $this->taskRepository->generateNewTaskFromCommandLine($input->getArgument('taskname'));
 
         $output->writeln('Task created.');
