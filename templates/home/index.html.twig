@@ -46,6 +46,14 @@
         {% endfor %}
     </div>
     {% endfor %}
+    {% if (summary == null) %}
+    <div class="task-daily-list today-task-list">
+        <div class="task-list-day-container">
+            <div class="task-list-element-left"><p>Today</p></div><div class="task-list-element-right today-total-time"><p>You did not work yet.</p></div>
+        </div>
+    </div>
+    {% endif %}
+</div>
 
 
 {% for message in app.flashes('message') %}<div class="notifier"><small>{{ message }}</small></div>{% endfor %}
