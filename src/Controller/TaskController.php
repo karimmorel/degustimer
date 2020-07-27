@@ -90,7 +90,6 @@ class TaskController extends AbstractController
 
             // Check if the task already exists and create a new TaskSpan
             $this->taskSpanRepository->stopRunningTaskSpan();
-            $this->addFlash('message', 'Task stopped');
             $entityManager->flush();
 
             // View or Ajax
