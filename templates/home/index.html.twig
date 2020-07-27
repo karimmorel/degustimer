@@ -139,7 +139,10 @@
         {% else %}
         var interval = Date.now();
         var degustInterval = setDegustimer(interval);
+        clearInterval(degustInterval);
         {% endif %}
+
+        
         var temporaryTitle;
 
         // Remove notifications at the end of 8 secondes since initialization
