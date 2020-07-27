@@ -27,7 +27,7 @@ But the database and composer are not set, I need you to use doctrine to migrate
 So you have to connect to your container :
 > **docker exec -ti <name_of_the_container> bin/bash**<br/>
 
-The container's name should be something like : degustabox_degustamer_1 or degustimer_degustimer_1
+The container's name should be something like : degustabox_degustimer_1 or degustimer_degustimer_1
 
 And to use doctrine :
 > **cd /app**<br/>
