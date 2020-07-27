@@ -141,13 +141,6 @@
         {% endif %}
         var temporaryTitle;
 
-
-        // On click on a button, we stop the timer
-        $('.submit-button').click(function(){
-            clearInterval(degustInterval);
-            upTimerBar();
-        });
-
         // Remove notifications at the end of 8 secondes since initialization
         setTimeout(function(){
             $('.notifier').fadeOut();
@@ -157,6 +150,10 @@
         $("#create-task-form").submit(function(e) {
 
             e.preventDefault();
+
+            clearInterval(degustInterval);
+            upTimerBar();
+
             $('#start-button').prop( "disabled", true );
 
             var form = $(this);
@@ -200,6 +197,10 @@
         $("#stop-task-form").submit(function(e) {
 
             e.preventDefault();
+
+            clearInterval(degustInterval);
+            upTimerBar();
+
             $('#start-button').prop( "disabled", true );
 
             var form = $(this);
