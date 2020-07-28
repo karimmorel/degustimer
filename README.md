@@ -25,7 +25,7 @@ There is a docker-compose file in the root of the project. So to start the conta
 When the container is completely initialized, the application should be accessible on <a target="_blank" href="http://localhost:80">localhost</a>, on the port 80.
 But the database and composer are not set, I need you to use doctrine to migrate the database.
 So you have to connect to your container :
-> **docker exec -ti <name_of_the_container> bin/bash**<br/>
+> **docker exec -it <name_of_the_container> bin/bash**<br/>
 
 The container's name should be something like : degustabox_degustimer_1 or degustimer_degustimer_1
 
@@ -60,7 +60,7 @@ Password : degustadmin<br/>
 ## One step further
 
 I added some commands accessible in the container :
-> **docker exec -ti <name_of_the_container> bin/bash**<br/>
+> **docker exec -it <name_of_the_container> bin/bash**<br/>
 > **cd /app**<br/>
 > **php bin/console task:start "Name of the task"**<br/>
 or<br/>
